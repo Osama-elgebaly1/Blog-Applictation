@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+
+{% block content %} 
+{% if request.user == post.author %}
+<div>
+    <a href="{% url "edit_blog" post.id %}"><button class='btn btn-secondary' >Edit Post</button></a> 
+    <a href="{% url "delete_blog" post.id %}"><button class='btn btn-danger' >Delete Post</button></a> 
+    
+</div>
+
+{% endif %}
+
+            <div class="row tm-row">
+           
+                <div>
+                    <img src = "{{post.image.url}}" alt="Image" class="mb-3 img-fluid">
+                </img>
+                </div>
+            </div>
+            <div class="row tm-row">
+                <div class="col-lg-8 tm-post-col">
+                    <div class="tm-post-full">                    
+                        <div class="mb-4">
+                            <h2 class="pt-2 tm-color-primary tm-post-title">{{post.title|title}}</h2>
+                            <p class="tm-mb-40">{{post.date|date:'M d Y '}} &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                posted by {{post.author}}</p>
+
+                            <p>
+                                {{post.content}}
+
+                            </p>
+                            <span class="d-block text-right tm-color-primary">Creative . Design . Business</span>
+                        </div>
+                        
+                        <!-- Comments -->
+                       
+                         <div>
+                            <h2 class="tm-color-primary tm-post-title">Comments</h2>
+                            <hr class="tm-hr-primary tm-mb-45">
+                        {% if comments %}
+                            {% for comment in comments %}
+                            <div class="tm-comment tm-mb-45">
+                                <figure class="tm-comment-figure">
+                                    {% if comment.user.profile.image %}
+                                        <img src="{{comment.user.profile.image.url}}" height="100" width="100" alt="Image" class="mb-2 rounded-circle img-thumbnail">
+                                    {% else %}
+                                        <img src="data:image/jpeg;base64,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" height="100" width="100" alt="Image" class="mb-2 rounded-circle img-thumbnail">
+
+                                    {% endif %}
+                                    <figcaption class="tm-color-primary text-center">{{comment.user.username}}</figcaption>
+                                </figure>
+                                <div>
+                                    <p>
+                                       {{comment.comment}}
+                                    </p>
+                                    <br>
+                                    <div class="d-flex justify-content-between">
+                                    {% if request.user.id == comment.user.id or request.user.id == post.author.id %}
+                                    <form action="{% url "delete_comment" %}" method='POST'>
+                                        {% csrf_token %}
+                                        <input type="hidden" name = "comment-pk" value="{{comment.id}}">
+                                        <button type="Submit" class="btn btn-danger">Delete</button>
+
+                                    </form>
+                                    {% endif %}
+                                        <span class="tm-color-primary space-before">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;{{ comment.created_at|timesince }}</span>
+                                    </div>                                                 
+                                </div>                                
+                            </div>
+                            <hr>
+                            {% endfor %}
+                           {% else %}
+                            <p>No comments yet </p>
+                           {% endif %}
+
+                            <form action="{% url "add_comment" %}" class="mb-5 tm-comment-form" method='POST'>
+                                {% csrf_token %}
+                                <h2 class="tm-color-primary tm-post-title mb-4">Your comment</h2>
+  
+                                <div class="mb-4">
+                                    <input type="hidden" name="blog" value="{{post.id}}">
+                                    <input class="form-control" name="content" type="text">
+                                </div>
+  
+                                <div class="text-right">
+                                    <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>                        
+                                </div>                                
+                            </form>                          
+                        </div>
+
+
+                    </div>
+                </div>
+                <aside class="col-lg-4 tm-aside-col">
+                    <div class="tm-post-sidebar">
+                        <hr class="mb-3 tm-hr-primary">
+                        <h2 class="mb-4 tm-post-title tm-color-primary">Categories</h2>
+                        <ul class="tm-mb-75 pl-5 tm-category-list">
+                            {% for tag in post.tags.all %}
+                            <li><a href="{% url "tags" tag.slug %}" class="tm-color-primary">{{tag}}</a></li>
+                            {% endfor %}
+       
+                        </ul>
+                        <hr class="mb-3 tm-hr-primary">
+                        <h2 class="tm-mb-40 tm-post-title tm-color-primary">Related Posts</h2>
+                        {% for related_post in related_posts %}
+                        <a href="{% url "post" related_post.id %}" class="d-block tm-mb-40">
+                            <figure>
+                                <img src="{{related_post.image.url}}" alt="Image" class="mb-3 img-fluid">
+                                <figcaption class="tm-color-primary">{{related_post.title|title}}</figcaption>
+                            </figure>
+                        </a>
+                        {% endfor %}
+
+
+                    </div>                    
+                </aside>
+            </div>
+
+        </main>
+    </div>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/templatemo-script.js' %}"></script>
+{% endblock content %}    
+</html>
